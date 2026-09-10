@@ -1,47 +1,96 @@
 import React from 'react';
 import { PLATFORMS } from '../data/content';
-import { Ticket, ExternalLink, Layers } from 'lucide-react';
+
+/**
+ * Continuous logo marquee.
+ *
+ * The track holds the platform list twice and slides left by exactly 50% of its
+ * own width, so the second copy lands where the first began and the loop is
+ * seamless. Hovering pauses it; `prefers-reduced-motion` stops it outright
+ * (handled in index.css), which leaves the first copy legible and static.
+ */
+function PlatformItem({ platform }) {
+  // Brand file missing — keep the row rhythm with a monogram tile.
+  if (!platform.logo) {
+    return (
+      <>
+        <span
+          aria-hidden="true"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-navy-800 font-serif text-lg font-bold text-ivory-50 sm:h-12 sm:w-12"
+        >
+          {platform.name.charAt(0)}
+        </span>
+        <span className="font-serif text-xl font-semibold text-navy-800">
+          {platform.name}
+        </span>
+      </>
+    );
+  }
+
+  // The artwork already carries the brand name — show it on its own.
+  if (platform.wordmark) {
+    return (
+      <img
+        src={platform.logo}
+        alt={platform.name}
+        className="h-10 w-auto shrink-0 object-contain sm:h-12"
+        loading="lazy"
+      />
+    );
+  }
+
+  // Glyph-only mark: pair it with the platform name.
+  return (
+    <>
+      <img
+        src={platform.logo}
+        alt=""
+        aria-hidden="true"
+        className="h-9 w-9 shrink-0 object-contain sm:h-11 sm:w-11"
+        loading="lazy"
+      />
+      <span className="font-serif text-xl font-semibold text-navy-800">
+        {platform.name}
+      </span>
+    </>
+  );
+}
+
+function Track({ ariaHidden }) {
+  return (
+    <ul
+      className="flex shrink-0 items-center gap-14 pr-14 sm:gap-20 sm:pr-20"
+      aria-hidden={ariaHidden || undefined}
+    >
+      {PLATFORMS.map((platform) => (
+        <li key={platform.name} className="flex items-center gap-3 whitespace-nowrap">
+          <PlatformItem platform={platform} />
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export default function PlatformTicker() {
   return (
-    <section className="py-12 border-y border-slate-800/80 bg-slate-950/40 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-400 mb-1">
-              <Layers className="w-3.5 h-3.5" />
-              <span>Platform Ecosystem</span>
-            </div>
-            <h2 className="text-xl sm:text-2xl font-heading font-bold text-white">
-              Representative Platforms We Facilitate With
-            </h2>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-md">
-            *Platform names represent illustrative examples of third-party distribution & ticketing networks for which structured monetization and advance facilities are structured.
-          </p>
-        </div>
+    <section className="border-y border-ivory-400 bg-ivory-200 py-12 sm:py-14">
+      <div className="container-page">
+        <p className="eyebrow text-center">Platforms We Facilitate Funding Through</p>
+      </div>
 
-        {/* Platform Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4">
-          {PLATFORMS.map((platform, idx) => (
-            <div
-              key={idx}
-              className="bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800/80 hover:border-brand-500/40 rounded-xl p-3.5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-0.5 group"
-            >
-              <div>
-                <span className="text-[10px] font-semibold text-brand-400 uppercase tracking-wider block mb-1">
-                  {platform.tag}
-                </span>
-                <h3 className="font-heading font-bold text-sm text-slate-100 group-hover:text-white transition-colors">
-                  {platform.name}
-                </h3>
-              </div>
-              <p className="text-[11px] text-slate-500 mt-2 line-clamp-1">
-                {platform.category}
-              </p>
-            </div>
-          ))}
+      <div className="marquee-mask group mt-7 overflow-hidden">
+        <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
+          <Track />
+          {/* Duplicate copy: the seam the animation loops across. */}
+          <Track ariaHidden />
         </div>
+      </div>
+
+      <div className="container-page">
+        <p className="mt-7 text-center text-xs leading-relaxed text-stone-400">
+          Illustrative examples of third-party ticketing and distribution platforms.
+          Named platforms are not exclusive partners of Grow Consultants.
+        </p>
       </div>
     </section>
   );

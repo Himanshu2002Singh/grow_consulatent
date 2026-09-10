@@ -1,65 +1,54 @@
 import React, { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { FAQS } from '../data/content';
-import { HelpCircle, ChevronDown } from 'lucide-react';
 
 export default function FAQSection() {
   const [openIdx, setOpenIdx] = useState(0);
 
-  const toggleFAQ = (idx) => {
-    setOpenIdx(openIdx === idx ? -1 : idx);
-  };
-
   return (
-    <section className="py-20 lg:py-28 relative">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="glow-badge mb-3">
-            <HelpCircle className="w-3.5 h-3.5" />
+    <section className="section border-t border-ivory-400">
+      <div className="container-page max-w-3xl">
+        <div className="text-center">
+          <p className="eyebrow eyebrow-rule">
             <span>Frequently Asked Questions</span>
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-heading font-extrabold text-white tracking-tight mb-4">
-            Common Questions & Clarifications
-          </h2>
-          <p className="text-sm sm:text-base text-slate-300">
-            Clear, transparent answers about our advisory mandate and platform funding facilitation.
           </p>
+          <h2 className="mt-5 font-serif text-2xl font-bold tracking-tight text-navy-800 sm:text-3xl">
+            Common Questions &amp; Clarifications
+          </h2>
         </div>
 
-        {/* Accordion */}
-        <div className="space-y-4">
+        <dl className="mt-10 divide-y divide-ivory-400 border-y border-ivory-400">
           {FAQS.map((faq, idx) => {
             const isOpen = openIdx === idx;
             return (
-              <div
-                key={idx}
-                className="glass-card rounded-2xl border border-slate-800 overflow-hidden transition-all duration-200"
-              >
-                <button
-                  onClick={() => toggleFAQ(idx)}
-                  className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 focus:outline-none"
-                >
-                  <span className="font-heading font-bold text-sm sm:text-base text-white">
-                    {faq.q}
-                  </span>
-                  <div className={`w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center flex-shrink-0 text-slate-400 transition-transform duration-300 ${
-                    isOpen ? 'rotate-180 bg-brand-500/20 text-brand-400' : ''
-                  }`}>
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                </button>
-
+              <div key={faq.q}>
+                <dt>
+                  <button
+                    type="button"
+                    onClick={() => setOpenIdx(isOpen ? -1 : idx)}
+                    aria-expanded={isOpen}
+                    className="flex w-full items-center justify-between gap-6 py-5 text-left"
+                  >
+                    <span className="font-sans text-base font-bold text-navy-800">
+                      {faq.q}
+                    </span>
+                    <ChevronDown
+                      aria-hidden="true"
+                      className={`h-5 w-5 shrink-0 text-gold-500 transition-transform duration-200 ${
+                        isOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                </dt>
                 {isOpen && (
-                  <div className="px-6 pb-6 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-4">
+                  <dd className="pb-6 pr-10 text-sm leading-relaxed text-stone-500">
                     {faq.a}
-                  </div>
+                  </dd>
                 )}
               </div>
             );
           })}
-        </div>
-
+        </dl>
       </div>
     </section>
   );

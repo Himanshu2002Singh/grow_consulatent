@@ -1,77 +1,43 @@
 import React, { useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
+
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import PlatformTicker from './components/PlatformTicker';
-import AboutSection from './components/AboutSection';
-import ServicesSection from './components/ServicesSection';
-import WhoWeServe from './components/WhoWeServe';
-import HowItWorks from './components/HowItWorks';
-import FundingCalculator from './components/FundingCalculator';
-import WhyUs from './components/WhyUs';
-import ApproachSection from './components/ApproachSection';
-import FAQSection from './components/FAQSection';
-import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
 import ConsultationModal from './components/ConsultationModal';
+
+import Home from './pages/Home';
+import About from './pages/About';
+import WhatWeDo from './pages/WhatWeDo';
+import WhoWeServe from './pages/WhoWeServe';
+import HowItWorks from './pages/HowItWorks';
+import WhyUs from './pages/WhyUs';
+import Contact from './pages/Contact';
+import NotFound from './pages/NotFound';
 
 export default function App() {
   const [modalOpen, setModalOpen] = useState(false);
-
-  const handleOpenContact = () => {
-    // Either scroll smoothly to contact or open modal
-    const contactElem = document.getElementById('contact');
-    if (contactElem) {
-      contactElem.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      setModalOpen(true);
-    }
-  };
+  const openContact = () => setModalOpen(true);
 
   return (
-    <div className="min-h-screen bg-[#060d19] text-slate-100 flex flex-col selection:bg-brand-500 selection:text-white">
-      {/* Sticky Top Navigation */}
-      <Navbar onOpenContact={() => setModalOpen(true)} />
+    <div className="flex min-h-screen flex-col bg-ivory-100 text-navy-800">
+      <ScrollToTop />
+      <Navbar onOpenContact={openContact} />
 
-      {/* Main Page Flow */}
       <main className="flex-grow">
-        {/* 1. Hero with 3 Key Value Cards */}
-        <Hero onOpenContact={() => setModalOpen(true)} />
-
-        {/* 2. Platform Ecosystem Showcase */}
-        <PlatformTicker />
-
-        {/* 3. About Firm & Partnership */}
-        <AboutSection />
-
-        {/* 4. Core Services & Mandatory Disclaimer */}
-        <ServicesSection onOpenContact={() => setModalOpen(true)} />
-
-        {/* 5. Who We Serve (Hospitality vs Artists) */}
-        <WhoWeServe onOpenContact={() => setModalOpen(true)} />
-
-        {/* 6. How It Works (6-Step Lifecycle) */}
-        <HowItWorks />
-
-        {/* 7. Interactive Facility Assessment Estimator */}
-        <FundingCalculator onOpenContact={() => setModalOpen(true)} />
-
-        {/* 8. Why Choose Us (6 Differentiators) */}
-        <WhyUs />
-
-        {/* 9. Approach & Governance Principles */}
-        <ApproachSection />
-
-        {/* 10. FAQ Accordion */}
-        <FAQSection />
-
-        {/* 11. Contact Form & Registered Delhi Office */}
-        <ContactSection />
+        <Routes>
+          <Route path="/" element={<Home onOpenContact={openContact} />} />
+          <Route path="/about" element={<About onOpenContact={openContact} />} />
+          <Route path="/what-we-do" element={<WhatWeDo onOpenContact={openContact} />} />
+          <Route path="/who-we-serve" element={<WhoWeServe onOpenContact={openContact} />} />
+          <Route path="/how-it-works" element={<HowItWorks onOpenContact={openContact} />} />
+          <Route path="/why-us" element={<WhyUs onOpenContact={openContact} />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </main>
 
-      {/* 12. Footer with Full Legal Snapshot */}
       <Footer />
-
-      {/* Quick Consultation Modal */}
       <ConsultationModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );

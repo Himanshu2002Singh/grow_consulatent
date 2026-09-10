@@ -1,196 +1,207 @@
-import React, { useState } from 'react';
-import { X, MessageSquare, Mail, Copy, CheckCircle2, ShieldCheck, ArrowUpRight } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { X } from 'lucide-react';
 import { COMPANY_INFO } from '../data/content';
+import { copyText } from '../lib/clipboard';
+
+const CATEGORIES = [
+  'Hospitality (Restaurant / Bar / Lounge)',
+  'Performing Artist / Tour / Live Shows',
+  'Talent Management / Booking Agency',
+  'Multi-Outlet Franchise Group',
+  'Event Venue / Promoter',
+];
+
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 export default function ConsultationModal({ isOpen, onClose }) {
-  const [copied, setCopied] = useState(false);
+  const dialogRef = useRef(null);
+  const formRef = useRef(null);
+  const previouslyFocused = useRef(null);
+  const [copyState, setCopyState] = useState('idle');
   const [form, setForm] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    type: 'Hospitality (Restaurant / Bar / Lounge)',
-    notes: ''
+    name: '', phone: '', email: '', type: CATEGORIES[0], notes: '',
   });
+
+  // Lock scroll, trap focus, close on Escape, and restore focus on unmount.
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    previouslyFocused.current = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    dialogRef.current?.querySelector(FOCUSABLE)?.focus();
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+
+      const focusable = dialogRef.current?.querySelectorAll(FOCUSABLE);
+      if (!focusable?.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previouslyFocused.current?.focus?.();
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
-  const buildMessage = () => {
-    return `*Grow Consultants - Structuring Inquiry*\n\n` +
-      `• *Name:* ${form.name || 'Not provided'}\n` +
-      `• *Phone:* ${form.phone || 'Not provided'}\n` +
-      `• *Email:* ${form.email || 'Not provided'}\n` +
-      `• *Category:* ${form.type}\n` +
-      `• *Details:* ${form.notes || 'Inquiry regarding platform funding & advances'}`;
-  };
+  const update = (key) => (e) => setForm((prev) => ({ ...prev, [key]: e.target.value }));
+
+  const buildMessage = () =>
+    [
+      '*Grow Consultants — Structuring Inquiry*',
+      '',
+      `• *Name:* ${form.name || 'Not provided'}`,
+      `• *Phone:* ${form.phone || 'Not provided'}`,
+      `• *Email:* ${form.email || 'Not provided'}`,
+      `• *Category:* ${form.type}`,
+      `• *Details:* ${form.notes || 'Inquiry regarding platform funding & advances'}`,
+    ].join('\n');
 
   const handleWhatsApp = (e) => {
     e.preventDefault();
-    const msg = buildMessage();
-    const url = `https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(msg)}`;
-    window.open(url, '_blank');
+    window.open(
+      `https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(buildMessage())}`,
+      '_blank',
+      'noopener,noreferrer',
+    );
   };
 
-  const handleEmail = (e) => {
-    e.preventDefault();
-    const msg = buildMessage();
-    const mailto = `mailto:${COMPANY_INFO.email}?subject=${encodeURIComponent('Financial Structuring Inquiry - ' + (form.name || 'Client'))}&body=${encodeURIComponent(msg)}`;
-    window.location.href = mailto;
+  const handleEmail = () => {
+    if (!formRef.current?.reportValidity()) return;
+    const subject = `Financial Structuring Inquiry — ${form.name || 'Client'}`;
+    window.location.href =
+      `mailto:${COMPANY_INFO.email}?subject=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(buildMessage())}`;
   };
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(buildMessage());
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async () => {
+    const ok = await copyText(buildMessage());
+    setCopyState(ok ? 'copied' : 'failed');
+    setTimeout(() => setCopyState('idle'), 2500);
   };
+
+  const inputClass =
+    'w-full rounded-sm border border-ivory-400 bg-ivory-50 px-3.5 py-2.5 text-sm text-navy-800 placeholder-stone-400 focus:border-gold-500 focus:outline-none focus:ring-1 focus:ring-gold-500';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden">
-        {/* Close Button */}
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-navy-950/60 p-4 backdrop-blur-sm"
+      onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="consultation-title"
+        className="relative my-8 w-full max-w-lg border border-ivory-400 bg-ivory-100 p-6 shadow-paper-lg sm:p-8"
+      >
         <button
+          type="button"
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-full bg-slate-800 text-slate-400 hover:text-white transition-colors"
-          aria-label="Close modal"
+          aria-label="Close dialog"
+          className="absolute right-4 top-4 rounded-sm p-1.5 text-stone-500 transition-colors hover:bg-ivory-200 hover:text-navy-800"
         >
-          <X className="w-5 h-5" />
+          <X className="h-5 w-5" />
         </button>
 
-        <div>
-          <div className="mb-5">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-400">
-              Grow Consultants Advisory
-            </span>
-            <h3 className="text-xl font-heading font-bold text-white mt-1">
-              Connect Directly with Advisory Desk
-            </h3>
-            <p className="text-xs text-slate-400 mt-1">
-              Enter your details to initiate an instant discussion on WhatsApp or Email.
-            </p>
+        <p className="eyebrow">Grow Consultants Advisory</p>
+        <h2 id="consultation-title" className="mt-2 font-serif text-xl font-bold text-navy-800">
+          Connect with the advisory desk
+        </h2>
+        <p className="mt-1.5 text-sm text-stone-500">
+          Your details open a pre-filled message on WhatsApp or in your email
+          client. Nothing is stored on this website.
+        </p>
+
+        <form ref={formRef} onSubmit={handleWhatsApp} className="mt-6 space-y-4">
+          <div>
+            <label htmlFor="modal-name" className="mb-1.5 block text-xs font-semibold text-navy-800">
+              Full Name / Contact Person <span className="text-gold-600">*</span>
+            </label>
+            <input
+              id="modal-name" type="text" required autoComplete="name"
+              value={form.name} onChange={update('name')}
+              placeholder="e.g. Abhinav Sharma" className={inputClass}
+            />
           </div>
 
-          <form className="space-y-3.5">
+          <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="text-xs font-medium text-slate-300 block mb-1">
-                Full Name / Contact Person *
+              <label htmlFor="modal-phone" className="mb-1.5 block text-xs font-semibold text-navy-800">
+                Phone / WhatsApp <span className="text-gold-600">*</span>
               </label>
               <input
-                type="text"
-                required
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="e.g. Abhinav Sharma"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-brand-500"
+                id="modal-phone" type="tel" required autoComplete="tel"
+                value={form.phone} onChange={update('phone')}
+                placeholder="+91 98765 43210" className={inputClass}
               />
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="text-xs font-medium text-slate-300 block mb-1">
-                  Phone / WhatsApp *
-                </label>
-                <input
-                  type="tel"
-                  required
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  placeholder="+91 98765 43210"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-brand-500"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-medium text-slate-300 block mb-1">
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="name@domain.com"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-brand-500"
-                />
-              </div>
-            </div>
-
             <div>
-              <label className="text-xs font-medium text-slate-300 block mb-1">
-                Business / Talent Category
+              <label htmlFor="modal-email" className="mb-1.5 block text-xs font-semibold text-navy-800">
+                Email Address <span className="text-gold-600">*</span>
               </label>
-              <select
-                value={form.type}
-                onChange={(e) => setForm({ ...form, type: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-brand-500"
-              >
-                <option value="Hospitality (Restaurant / Bar / Lounge)">Hospitality (Restaurant / Bar / Lounge)</option>
-                <option value="Performing Artist / Tour / Live Shows">Performing Artist / Comedian / Tour</option>
-                <option value="Talent Management / Booking Agency">Talent Management Agency</option>
-                <option value="Multi-Outlet Franchise Group">Multi-Outlet Franchise Group</option>
-                <option value="Event Venue / Promoter">Event Venue / Promoter</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-slate-300 block mb-1">
-                Brief Note (Optional)
-              </label>
-              <textarea
-                rows={2}
-                value={form.notes}
-                onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                placeholder="Upcoming event dates, ticket volume, or expansion needs..."
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-brand-500"
+              <input
+                id="modal-email" type="email" required autoComplete="email"
+                value={form.email} onChange={update('email')}
+                placeholder="name@domain.com" className={inputClass}
               />
             </div>
+          </div>
 
-            {/* Direct Real Action Buttons */}
-            <div className="pt-2 space-y-2">
-              <button
-                type="button"
-                onClick={handleWhatsApp}
-                className="w-full py-3 rounded-xl text-xs sm:text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-500 shadow-glow-sm flex items-center justify-center gap-2 transition-all active:scale-98"
-              >
-                <MessageSquare className="w-4 h-4" />
-                <span>Chat Directly on WhatsApp</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
+          <div>
+            <label htmlFor="modal-type" className="mb-1.5 block text-xs font-semibold text-navy-800">
+              Business / Talent Category
+            </label>
+            <select id="modal-type" value={form.type} onChange={update('type')} className={inputClass}>
+              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="modal-notes" className="mb-1.5 block text-xs font-semibold text-navy-800">
+              Brief Note (optional)
+            </label>
+            <textarea
+              id="modal-notes" rows={3} value={form.notes} onChange={update('notes')}
+              placeholder="Upcoming event dates, ticket volume, or expansion needs..."
+              className={inputClass}
+            />
+          </div>
+
+          <div className="space-y-3 pt-1">
+            <button type="submit" className="btn-primary w-full">
+              Chat on WhatsApp
+            </button>
+            <div className="grid grid-cols-2 gap-3">
+              <button type="button" onClick={handleEmail} className="btn-ghost">
+                Send via Email
               </button>
-
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={handleEmail}
-                  className="py-2.5 px-3 rounded-xl text-xs font-semibold text-slate-200 bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center gap-1.5 transition-all"
-                >
-                  <Mail className="w-3.5 h-3.5 text-brand-400" />
-                  <span>Send via Email</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleCopy}
-                  className="py-2.5 px-3 rounded-xl text-xs font-semibold text-slate-200 bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center gap-1.5 transition-all"
-                >
-                  {copied ? (
-                    <>
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                      <span className="text-emerald-400">Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5 text-slate-400" />
-                      <span>Copy Details</span>
-                    </>
-                  )}
-                </button>
-              </div>
+              <button type="button" onClick={handleCopy} className="btn-ghost">
+                {copyState === 'copied' ? 'Copied' : copyState === 'failed' ? 'Copy failed' : 'Copy Details'}
+              </button>
             </div>
-
-            <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-500 pt-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Direct routing to Grow Consultants Partner Advisory Desk</span>
-            </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   );

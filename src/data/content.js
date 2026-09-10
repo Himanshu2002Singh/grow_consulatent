@@ -23,14 +23,33 @@ export const COMPANY_INFO = {
   roleClarification: "Independent financial consultant and transaction facilitator only. Does not lend money, does not act as talent manager or booking agent."
 };
 
+export const NAV_LINKS = [
+  { name: "Home", path: "/" },
+  { name: "About", path: "/about" },
+  { name: "What We Do", path: "/what-we-do" },
+  { name: "Who We Serve", path: "/who-we-serve" },
+  { name: "How It Works", path: "/how-it-works" },
+  { name: "Why Us", path: "/why-us" },
+  { name: "Contact", path: "/contact" }
+];
+
+// `logo` points at a brand file in /public/logos.
+//
+// `wordmark: true` means the file already spells out the brand name, so the
+// marquee shows the artwork alone. Otherwise the file is a glyph-only mark and
+// the marquee pairs it with `name` — which matters for the sub-brands here
+// ("District by Zomato" is not the same product as Zomato).
+//
+// If a brand file is ever missing, set `logo: null` and the marquee falls back
+// to a monogram tile rather than breaking the row.
 export const PLATFORMS = [
-  { name: "District by Zomato", category: "Dining & Events", tag: "F&B & Live" },
-  { name: "BookMyShow", category: "Live Events & Movies", tag: "Concerts & Comedy" },
-  { name: "Swiggy Scenes", category: "Dining & Experiences", tag: "F&B Footfall" },
-  { name: "MagicPin", category: "Local Discovery & Dining", tag: "High-Volume Retail" },
-  { name: "EazyDiner", category: "Premium Table Bookings", tag: "Hospitality & Bars" },
-  { name: "Skillbox", category: "Live Music & Festivals", tag: "Independent Artists" },
-  { name: "Paytm Insider", category: "Events & Ticketing", tag: "Experiential Venues" }
+  { name: "District by Zomato", category: "Dining & Events", tag: "F&B & Live", logo: "/logos/district.svg", wordmark: true },
+  { name: "BookMyShow", category: "Live Events & Movies", tag: "Concerts & Comedy", logo: "/logos/bookmyshow.png", wordmark: true },
+  { name: "Swiggy Scenes", category: "Dining & Experiences", tag: "F&B Footfall", logo: "/logos/swiggy-scenes.png", wordmark: true },
+  { name: "MagicPin", category: "Local Discovery & Dining", tag: "High-Volume Retail", logo: "/logos/magicpin.png", wordmark: true },
+  { name: "EazyDiner", category: "Premium Table Bookings", tag: "Hospitality & Bars", logo: "/logos/eazydiner.svg", wordmark: true },
+  { name: "Skillbox", category: "Live Music & Festivals", tag: "Independent Artists", logo: "/logos/skillbox.svg", wordmark: true },
+  { name: "Paytm Insider", category: "Events & Ticketing", tag: "Experiential Venues", logo: "/logos/paytm-insider.png", wordmark: true }
 ];
 
 export const VALUE_BOXES = [

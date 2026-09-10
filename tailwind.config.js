@@ -7,42 +7,60 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: '#f0f7ff',
-          100: '#e0effe',
-          200: '#bae0fd',
-          300: '#7cc7fb',
-          400: '#38aaf6',
-          500: '#0e8ce9',
-          600: '#026fc7',
-          700: '#0358a1',
-          800: '#074b84',
-          900: '#0c3f6e',
-          950: '#072849',
+        // Warm paper canvas
+        ivory: {
+          50: '#FBF9F5',
+          100: '#F7F4ED',
+          200: '#F1EBDE',
+          300: '#E8E0CD',
+          400: '#E0D8C6',
         },
+        // Deep navy ink
         navy: {
-          800: '#0f1d36',
-          900: '#0a1426',
-          950: '#060d19',
+          500: '#2E4670',
+          600: '#22385C',
+          700: '#1B2C49',
+          800: '#14243F',
+          900: '#0E1A2E',
+          950: '#080F1C',
         },
+        // Muted gold accent
         gold: {
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-        }
+          300: '#D8C48A',
+          400: '#C4A659',
+          500: '#A8842C',
+          600: '#8A6C22',
+        },
+        // Warm greys for body copy
+        stone: {
+          400: '#8A8271',
+          500: '#6B6558',
+          600: '#544F45',
+        },
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
-        heading: ['"Plus Jakarta Sans"', 'sans-serif'],
-      },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        serif: ['"Source Serif 4"', '"Source Serif Pro"', 'Georgia', 'serif'],
+        heading: ['"Source Serif 4"', '"Source Serif Pro"', 'Georgia', 'serif'],
       },
       boxShadow: {
-        'glow-sm': '0 0 15px -3px rgba(14, 140, 233, 0.25)',
-        'glow-md': '0 0 25px -5px rgba(14, 140, 233, 0.35)',
-        'glow-lg': '0 0 40px -10px rgba(14, 140, 233, 0.45)',
-      }
+        'paper': '0 1px 2px rgba(20, 36, 63, 0.04), 0 8px 24px -12px rgba(20, 36, 63, 0.10)',
+        'paper-lg': '0 2px 4px rgba(20, 36, 63, 0.04), 0 20px 48px -20px rgba(20, 36, 63, 0.16)',
+      },
+      keyframes: {
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-50%)' },
+        },
+        'fade-in': {
+          from: { opacity: '0', transform: 'translateY(6px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
+      animation: {
+        marquee: 'marquee 42s linear infinite',
+        'fade-in': 'fade-in 0.4s ease-out both',
+      },
     },
   },
   plugins: [],

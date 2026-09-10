@@ -5,55 +5,96 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
-  
+
   body {
-    @apply bg-[#060d19] text-slate-200 overflow-x-hidden;
+    @apply bg-ivory-100 text-navy-800 overflow-x-hidden;
+  }
+
+  /* The header is fixed; keep in-page anchors clear of it. */
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+
+  ::selection {
+    @apply bg-gold-300 text-navy-900;
+  }
+}
+
+@layer components {
+  /* Small caps label used above section headings */
+  .eyebrow {
+    @apply text-[11px] font-bold uppercase tracking-[0.18em] text-gold-500;
+  }
+
+  /* Centred eyebrow flanked by gold hairlines */
+  .eyebrow-rule {
+    @apply flex items-center justify-center gap-4;
+  }
+  .eyebrow-rule::before,
+  .eyebrow-rule::after {
+    content: '';
+    @apply h-px w-10 bg-gold-300 sm:w-12;
+  }
+
+  .section {
+    @apply py-16 sm:py-20 lg:py-28;
+  }
+
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3.5 text-sm font-semibold transition-colors;
+  }
+  .btn-primary {
+    @apply btn bg-navy-800 text-ivory-50 hover:bg-navy-700;
+  }
+  .btn-ghost {
+    @apply btn border border-ivory-400 bg-transparent text-navy-800 hover:border-gold-400 hover:text-gold-600;
+  }
+
+  .card {
+    @apply rounded-sm border border-ivory-300 bg-ivory-50 p-6 sm:p-7;
+  }
+
+  .hairline {
+    @apply h-px w-full bg-ivory-400;
   }
 }
 
 @layer utilities {
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-400;
-  }
-  
-  .text-gradient-brand {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-400 via-sky-300 to-brand-500;
-  }
-
-  .text-gradient-gold {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500;
-  }
-  
-  .glass-card {
-    @apply bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 shadow-xl;
-  }
-
-  .glass-card-hover {
-    @apply transition-all duration-300 hover:border-brand-500/40 hover:bg-slate-900/80 hover:shadow-glow-sm hover:-translate-y-1;
-  }
-
-  .glass-nav {
-    @apply bg-[#060d19]/80 backdrop-blur-md border-b border-slate-800/60;
-  }
-
-  .glow-badge {
-    @apply inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold tracking-wide border border-brand-500/30 bg-brand-500/10 text-brand-300;
+  /* Marquee viewport: fades the track out at both edges */
+  .marquee-mask {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 6rem,
+      #000 calc(100% - 6rem),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 6rem,
+      #000 calc(100% - 6rem),
+      transparent
+    );
   }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #060d19;
-}
-::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+/* Honour the OS "reduce motion" setting: stop the marquee, drop the fades. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-marquee,
+  .animate-fade-in {
+    animation: none !important;
+  }
+  .marquee-mask {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
 }
