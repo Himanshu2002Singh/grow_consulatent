@@ -24,6 +24,17 @@ export default {
           900: '#0E1A2E',
           950: '#080F1C',
         },
+        // Forest tones drawn from the supplied Grow Consultants mark. Use for
+        // photographic overlays and dark brand surfaces; navy remains the
+        // primary text ink for the content pages.
+        forest: {
+          500: '#1F5A44',
+          600: '#184B38',
+          700: '#123C2D',
+          800: '#0D3024',
+          900: '#09251B',
+          950: '#061711',
+        },
         // Muted gold accent
         gold: {
           300: '#D8C48A',

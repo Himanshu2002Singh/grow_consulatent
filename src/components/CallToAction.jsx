@@ -2,10 +2,24 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 /** Closing band reused at the foot of every content page. */
-export default function CallToAction({ onOpenContact }) {
+export default function CallToAction({ onOpenContact, image }) {
   return (
-    <section className="border-t border-navy-700 bg-navy-800">
-      <div className="container-page py-14 text-center sm:py-16">
+    <section className="relative isolate overflow-hidden border-y border-gold-500/25 bg-navy-950">
+      <img
+        src={image}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 z-0 h-full w-full object-cover object-center"
+        loading="lazy"
+        decoding="async"
+      />
+      <div className="absolute inset-0 z-0 bg-navy-950/70" aria-hidden="true" />
+      <div
+        className="absolute inset-0 z-0 bg-gradient-to-r from-navy-950 via-navy-900/90 to-navy-950/70"
+        aria-hidden="true"
+      />
+
+      <div className="container-page relative z-10 py-20 text-center sm:py-24">
         <h2 className="mx-auto max-w-2xl font-serif text-2xl font-bold leading-snug text-ivory-50 sm:text-3xl">
           Ready to explore structured funding through ticketing platforms?
         </h2>

@@ -11,10 +11,12 @@ export default function WhatWeDo({ onOpenContact }) {
         eyebrow="Core Advisory Services"
         title="What we do"
         intro="Specialised consultancy and facilitation focused on funding opportunities available through third-party ticketing and distribution platforms, along with related commercial structuring support."
+        image="/images/restaurant-interior.webp"
+        variant="hospitality"
       />
       <ServicesSection onOpenContact={onOpenContact} />
       <PlatformTicker />
-      <CallToAction onOpenContact={onOpenContact} />
+      <CallToAction onOpenContact={onOpenContact} image="/images/funding-review.webp" />
     </>
   );
 }

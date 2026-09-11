@@ -118,6 +118,23 @@ export default function ContactSection() {
               </dd>
             </div>
           </dl>
+
+          <figure className="relative overflow-hidden border border-ivory-300 shadow-paper">
+            <img
+              src="/images/contact-venue.webp"
+              alt="Illustrative hospitality setting"
+              className="h-48 w-full object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-forest-950/90 via-transparent to-transparent" />
+            <figcaption className="absolute inset-x-0 bottom-0 p-5 text-ivory-50">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gold-300">A considered first conversation</p>
+              <p className="mt-1.5 font-serif text-lg leading-snug">
+                Tell us about the business, the opportunity and the platform context.
+              </p>
+            </figcaption>
+          </figure>
         </div>
 
         <div className="lg:col-span-7">

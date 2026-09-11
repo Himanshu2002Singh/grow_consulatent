@@ -9,6 +9,8 @@ export default function Contact() {
         eyebrow="Direct Commercial Advisory"
         title="Contact"
         intro="Ready to explore structured funding options through ticketing platforms, or discuss a specific opportunity? Get in touch with Grow Consultants."
+        image="/images/contact-consultation.webp"
+        variant="advisory"
       />
       <ContactSection />
     </>

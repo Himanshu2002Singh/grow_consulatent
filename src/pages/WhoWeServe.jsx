@@ -10,9 +10,11 @@ export default function WhoWeServe({ onOpenContact }) {
         eyebrow="Target Client Profiles"
         title="Who we work with"
         intro="We understand the operational realities of both venue operators and independent performing artists, and structure our engagement accordingly."
+        image="/images/hospitality-venue.webp"
+        variant="hospitality"
       />
       <WhoWeServeSection onOpenContact={onOpenContact} />
-      <CallToAction onOpenContact={onOpenContact} />
+      <CallToAction onOpenContact={onOpenContact} image="/images/who-team.webp" />
     </>
   );
 }

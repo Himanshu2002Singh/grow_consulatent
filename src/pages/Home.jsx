@@ -1,7 +1,6 @@
 import React from 'react';
 import Hero from '../components/Hero';
 import PlatformTicker from '../components/PlatformTicker';
-import ApproachSection from '../components/ApproachSection';
 import CallToAction from '../components/CallToAction';
 
 export default function Home({ onOpenContact }) {
@@ -9,8 +8,7 @@ export default function Home({ onOpenContact }) {
     <>
       <Hero onOpenContact={onOpenContact} />
       <PlatformTicker />
-      <ApproachSection />
-      <CallToAction onOpenContact={onOpenContact} />
+      <CallToAction onOpenContact={onOpenContact} image="/images/live-entertainment.webp" />
     </>
   );
 }

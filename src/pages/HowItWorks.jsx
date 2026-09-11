@@ -11,10 +11,12 @@ export default function HowItWorks({ onOpenContact }) {
         eyebrow="Process & Execution"
         title="How we work"
         intro="A structured, transparent six-step lifecycle from initial discussion to commercial closing and capital disbursement."
+        image="/images/how-stage.webp"
+        variant="entertainment"
       />
       <HowItWorksSection />
       <FundingCalculator onOpenContact={onOpenContact} />
-      <CallToAction onOpenContact={onOpenContact} />
+      <CallToAction onOpenContact={onOpenContact} image="/images/concert-crowd.webp" />
     </>
   );
 }
