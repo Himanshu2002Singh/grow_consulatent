@@ -239,6 +239,18 @@ export default function ContactSection() {
           </form>
         </div>
       </div>
+
+      <div className="container-page mt-12 sm:mt-16">
+        <div className="overflow-hidden border border-ivory-300 bg-ivory-50 shadow-paper-lg">
+          <iframe
+            title="Grow Consultants registered office location"
+            src="https://www.google.com/maps?q=Plot%20No.%2060%2C%20Street%20No.%202%2C%20Lalita%20Park%2C%20Laxmi%20Nagar%2C%20Delhi%20110092&output=embed"
+            className="h-[22rem] w-full border-0 sm:h-[28rem]"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </div>
+      </div>
     </section>
   );
 }
