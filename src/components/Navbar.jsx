@@ -33,7 +33,7 @@ export default function Navbar({ onOpenContact }) {
           : 'border-ivory-400 bg-ivory-100/95 shadow-paper backdrop-blur-md'
       }`}
     >
-      <div className="container-page flex items-center justify-between py-4">
+      <div className="container-page flex items-center justify-between py-0 sm:py-0.5">
         <Link
           to="/"
           onClick={() => setMobileMenuOpen(false)}
@@ -49,7 +49,7 @@ export default function Navbar({ onOpenContact }) {
           <img
             src="/brand/grow-consultants-nav-transparent.webp"
             alt="Grow Consultants & Co."
-            className="relative h-9 w-28 object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)] sm:h-10 sm:w-32"
+            className="relative -translate-y-0.5 h-auto w-[7.5rem] max-w-[34vw] object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)] sm:-translate-y-1 sm:w-[8.5rem]"
             onError={(event) => {
               event.currentTarget.onerror = null;
               event.currentTarget.src = '/brand/grow-consultants-nav.webp';

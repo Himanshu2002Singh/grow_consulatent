@@ -39,22 +39,18 @@ export default function Footer() {
 
         <div className="grid gap-12 md:grid-cols-12 md:gap-8 lg:gap-12">
           <section className="space-y-5 md:col-span-5" aria-label="About Grow Consultants">
-            <div className="relative w-fit px-2 py-2">
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-1 rounded-full bg-ivory-50/60 blur-2xl"
-              />
+            <div className="relative w-fit rounded-sm border border-gold-500/80 bg-[#d9d4ca] px-3 pb-3 pt-1 shadow-[0_10px_26px_rgba(0,0,0,0.22)]">
               <img
                 src="/brand/grow-consultants-lockup-transparent.webp"
                 alt="Grow Consultants"
-                className="relative h-20 w-auto max-w-[250px] object-contain drop-shadow-[0_4px_14px_rgba(0,0,0,0.3)] sm:h-24"
+                className="relative h-auto w-[15rem] max-w-full object-contain drop-shadow-[0_4px_14px_rgba(0,0,0,0.3)] sm:w-[18rem]"
               />
             </div>
             <div>
-              <p className="font-serif text-xl font-semibold text-ivory-50">
+              <p className="font-serif text-2xl font-semibold leading-tight text-ivory-50 sm:text-[1.65rem]">
                 {COMPANY_INFO.legalName}
               </p>
-              <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-gold-300">
+              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.2em] text-gold-300">
                 Specialised Financial Structuring
               </p>
             </div>
